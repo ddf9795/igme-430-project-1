@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>IGME 430 Project 1</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script>
+    //Handle response takes in the response object (from our fetch request), and 
+    //a boolean of if we should parse the response or not (since head requests have
+    //no actual response). It is marked as async because we will use await.
+    const handleResponse = async (response, parseResponse, content) => {
+      //Based on the status of the response, write something.
+      switch(response.status) {
+        case 200: 
+          content.innerHTML = `<b>Success</b>`;
+          break;
+        case 201:
+          content.innerHTML = `<b>Created</b>`;
+          break;
+        case 204:
+          content.innerHTML = `<b>Updated (No Content)</b>`;
+          break;
+        case 400: 
+          content.innerHTML = `<b>Bad Request</b>`;
+          break;
+        case 401:
+          content.innerHTML = `<b>Unauthorized</b>`;
+          break;
+        case 403:
+          content.innerHTML = `<b>Forbidden</b>`;
+          break;
+        case 500:
+          content.innerHTML = `<b>Internal Server Error</b>`;
+          break;
+        case 501:
+          content.innerHTML = `<b>Not Implemented</b>`;
+          break;
+        case 404:
+          content.innerHTML = `<b>Resource Not Found</b>`;
+          break;
+        default: 
+          content.innerHTML = `Error code not implemented by client.`;
+          break;
+      }
+
+      //If we should parse a response (meaning we didn't make a head request)
+      if(parseResponse !== 'head' && response.status !== 204) {
+        let obj = await response.json();
+    
+        let jsonResponse = JSON.stringify(obj);
+        console.log(jsonResponse);
+        //To display the data easily, we will just stringify it again and display it.
+        content.innerHTML += `<p>${JSON.stringify(Object.entries(obj)[0][1])}</p>`;
+      }
+    };
+
+    const init = () => {
+      document.querySelectorAll(".endpoint").forEach(endpoint => {
+        document.querySelectorAll(".collapsible").forEach(element => {
+          element.addEventListener("click", () => {
+            document.querySelectorAll(".collapsible").forEach(nestedElement => {
+              if (nestedElement !== element) {
+                nestedElement.nextElementSibling.style.display = "none";
+              }
+              else {
+                nestedElement.nextElementSibling.style.display = "block";
+              }
+            })
+          })
+        })
+
+        endpoint.querySelector('form').childNodes.forEach(child => {
+          if (child.name === "method") {
+            child.addEventListener('click', function() {
+              endpoint.querySelector('form').method = child.value;
+            })
+          }
+
+          if (child.type === "button") {
+            child.addEventListener('click', async function () {
+              let formData = new FormData(endpoint.querySelector('form'))
+              console.log(Object.fromEntries(formData));
+
+              const queryString = new URLSearchParams(new FormData(endpoint.querySelector('form'))).toString()
+
+              console.log(endpoint.querySelector('form').attributes)
+              //Make a fetch request and await a response.
+              if (endpoint.querySelector('form').attributes.getNamedItem('method').value == 'POST') {
+                let response = await fetch(endpoint.querySelector('form').attributes.getNamedItem('action').value, {
+                method: endpoint.querySelector('form').attributes.getNamedItem('method').value,
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'Accept': 'application/json',
+                },
+                body: queryString
+              });
+              handleResponse(response, endpoint.querySelector('form').method, endpoint.querySelector('pre'))
+              }
+              else {
+                let response = await fetch(endpoint.querySelector('form').attributes.getNamedItem('action').value + '?' + queryString, {
+                method: endpoint.querySelector('form').attributes.getNamedItem('method').value,
+                headers: {
+                  'Accept': 'application/json',
+                },
+              });
+              handleResponse(response, endpoint.querySelector('form').method, endpoint.querySelector('pre'))
+              }
+
+            })
+          }
+        })
+
+      })
+    };
+
+
+  window.onload = init;
+  </script>
+</head>
+<body>
+  <section id="title">
+    <h1>Book API Tests</h1>
+  </section>
+  <section id="body">
+
+    <!-- /api/getAllBooks -->
+    <div class="endpoint">
+      <h2 class="collapsible">
+        /api/getAllBooks
+        <span class="methods">
+          <code>GET</code>
+  
+          <code>HEAD</code>
+        </span>
+      </h2>
+      <div class="content" style="display: none;">
+        <div class="content-box">
+          <h3>Test this endpoint</h3>
+          <form method="GET" action="/api/getAllBooks">
+            <input type="radio" name="method" value="get" checked="" />
+            GET
+            <input type="radio" name="method" value="head" />
+            HEAD
+            <br>
+            <input type="button" value="Submit"/>
+          </form>
+          <pre class="result"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- /api/getBook -->
+    <div class="endpoint">
+      <h2 class="collapsible">
+        /api/getBook
+        <span class="methods">
+          <code>GET</code>
+  
+          <code>HEAD</code>
+        </span>
+      </h2>
+      <div class="content" style="display: none;">
+        <div class="content-box">
+          <h3>Test this endpoint</h3>
+          <form method="GET" action="/api/getBook">
+            <label>
+              Title: 
+              <input type="text" name="title">
+            </label>
+            <br>
+            <label>
+              Author: 
+              <input type="text" name="author">
+            </label>
+            <br>
+            <label>
+              Language: 
+              <input type="text" name="language">
+            </label>
+            <br>
+            <input type="radio" name="method" value="get" checked="" />
+            GET
+            <input type="radio" name="method" value="head" />
+            HEAD
+            <br>
+            <input type="button" value="Submit"/>
+          </form>
+          <pre class="result"></pre>
+        </div>
+      </div>
+    </div>
+    
+    <!-- /api/getBooksByAuthor -->
+    <div class="endpoint">
+      <h2 class="collapsible">
+        /api/getBooksByAuthor
+        <span class="methods">
+          <code>GET</code>
+  
+          <code>HEAD</code>
+        </span>
+      </h2>
+      <div class="content" style="display: none;">
+        <div class="content-box">
+          <h3>Test this endpoint</h3>
+          <form method="GET" action="/api/getBooksByAuthor">
+            <label>
+              Author: 
+              <input type="text" name="author">
+            </label>
+            <br>
+            <input type="radio" name="method" value="get" checked="" />
+            GET
+            <input type="radio" name="method" value="head" />
+            HEAD
+            <br>
+            <input type="button" value="Submit"/>
+          </form>
+          <pre class="result"></pre>
+        </div>
+      </div>
+    </div>
+
+      <!-- /api/getBooksByLanguage -->
+      <div class="endpoint">
+        <h2 class="collapsible">
+          /api/getBooksByLanguage
+          <span class="methods">
+            <code>GET</code>
+    
+            <code>HEAD</code>
+          </span>
+        </h2>
+        <div class="content" style="display: none;">
+          <div class="content-box">
+            <h3>Test this endpoint</h3>
+            <form method="GET" action="/api/getBooksByLanguage">
+              <label>
+                Language: 
+                <input type="text" name="language">
+              </label>
+              <br>
+              <input type="radio" name="method" value="get" checked="" />
+              GET
+              <input type="radio" name="method" value="head" />
+              HEAD
+              <br>
+              <input type="button" value="Submit"/>
+            </form>
+            <pre class="result"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- /api/addBook -->
+      <div class="endpoint">
+        <h2 class="collapsible">
+          /api/addBook
+          <span class="methods">
+            <code>POST</code>
+          </span>
+        </h2>
+        <div class="content" style="display: none;">
+          <div class="content-box">
+            <h3>Test this endpoint</h3>
+            <form method="POST" action="/api/addBook">
+              <label>
+                Author: 
+                <input type="text" name="author">
+              </label>
+              <br>
+              <label>
+                Country: 
+                <input type="text" name="country">
+              </label>
+              <br>
+              <label>
+                Language: 
+                <input type="text" name="language">
+              </label>
+              <br>
+              <label>
+                Link: 
+                <input type="text" name="link">
+              </label>
+              <br>
+              <label>
+                Page Count: 
+                <input type="number" name="pages">
+              </label>
+              <br>
+              <label>
+                Title: 
+                <input type="text" name="title">
+              </label>
+              <br>
+              <label>
+                Year: 
+                <input type="number" name="year">
+              </label>
+              <br>
+              <label>
+                Genres: 
+                <input type="text" name="genres">
+              </label>
+              <br>
+              <input type="button" value="Submit"/>
+            </form>
+            <pre class="result"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- /api/addGenreToBook -->
+      <div class="endpoint">
+        <h2 class="collapsible">
+          /api/addGenreToBook
+          <span class="methods">
+            <code>POST</code>
+          </span>
+        </h2>
+        <div class="content" style="display: none;">
+          <div class="content-box">
+            <h3>Test this endpoint</h3>
+            <form method="POST" action="/api/addGenreToBook">
+              <label>
+                Title: 
+                <input type="text" name="title">
+              </label>
+              <br>
+              <label>
+                Add Genres: 
+                <input type="text" name="genres">
+              </label>
+              <br>
+              <input type="button" value="Submit"/>
+            </form>
+            <pre class="result"></pre>
+          </div>
+        </div>
+      </div>
+  </section>
+</body>
+</html>
