@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>IGME 430 Project 1</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script>
+
+    const init = () => {
+      document.querySelectorAll(".endpoint").forEach(endpoint => {
+        document.querySelectorAll(".collapsible").forEach(element => {
+          element.addEventListener("click", () => {
+            document.querySelectorAll(".collapsible").forEach(nestedElement => {
+              if (nestedElement !== element) {
+                nestedElement.nextElementSibling.style.display = "none";
+              }
+              else {
+                nestedElement.nextElementSibling.style.display = "block";
+              }
+            })
+          })
+        })
+      })
+    };
+
+
+  window.onload = init;
+  </script>
+</head>
+<body>
+  <a href="/">Return to main page</a>
+
+  <section id="title">
+    <h1>Book API Documentation</h1>
+  </section>
+  <section id="body">
+
+    <!-- /api/getAllBooks -->
+    <div class="endpoint">
+      <h2 class="collapsible">
+        /api/getAllBooks
+        <span class="methods">
+          <code>GET</code>
+  
+          <code>HEAD</code>
+        </span>
+      </h2>
+      <div class="content" style="display: none;">
+        <div class="content-box">
+          <h3>Query Params</h3>
+          <p>No supported parameters.</p>
+          <h3>Returns</h3>
+          <p>A JSON array of book objects</p>
+          <p>Format: <code>[{ author: string, country: string, language: string, link: string, pages: number, title: string, year: number, genres: [string]}]</code></p>
+          <h3>Examples</h3>
+          <pre class="example">
+            <p>Request: <code>/apu/getAllBooks</code></p>
+            <p>Result: <code>[{"author":"Chinua Achebe","country":"Nigeria","language":"English","link":"https://en.wikipedia.org/wiki/Things_Fall_Apart\n","pages":209,"title":"Things Fall Apart","year":1958,"genres":["Historical Fiction","Postcolonial Literature"]}, ...]</code></p>
+          </pre>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- /api/getBook -->
+    <div class="endpoint">
+      <h2 class="collapsible">
+        /api/getBook
+        <span class="methods">
+          <code>GET</code>
+  
+          <code>HEAD</code>
+        </span>
+      </h2>
+      <div class="content" style="display: none;">
+        <div class="content-box">
+          <h3>Query Params</h3>
+          <p><code>title</code>: Title to filter by</p>
+          <p><code>author</code>: Author to filter by</p>
+          <p><code>language</code>: Language to filter by</p>
+          <h3>Returns</h3>
+          <p>A JSON array of book objects</p>
+          <p>Format: <code>[{ author: string, country: string, language: string, link: string, pages: number, title: string, year: number, genres: [string]}]</code></p>
+          <h3>Examples</h3>
+          <pre class="example">
+            <h4>No/partial parameters: Return a 400 error</h4>
+            <p>Request: <code>/api/getBook</code></p>
+            <p>Result: <code>{"message":"Missing search fields","id":"missingParams"}</code></p>
+          </pre>
+          <pre class="example">
+            <h4>Full parameters: Returns applicable book</h4>
+            <p>Request: <code>/api/getBook?title=Iliad&author=Homer&language=Greek</code></p>
+            <p>Result: <code>[{"author":"Homer","country":"Greece","language":"Greek","link":"https://en.wikipedia.org/wiki/Iliad\n","pages":608,"title":"Iliad","year":-735,"genres":["Epic Saga","Mythology"]}]</code></p>
+          </pre>
+        </div>
+      </div>
+    </div>
+    
+    <!-- /api/getBooksByAuthor -->
+    <div class="endpoint">
+      <h2 class="collapsible">
+        /api/getBooksByAuthor
+        <span class="methods">
+          <code>GET</code>
+  
+          <code>HEAD</code>
+        </span>
+      </h2>
+      <div class="content" style="display: none;">
+        <div class="content-box">
+          <h3>Query Params</h3>
+          <p><code>author</code>: Author to filter by</p>
+          <h3>Returns</h3>
+          <p>A JSON array of book objects</p>
+          <p>Format: <code>[{ author: string, country: string, language: string, link: string, pages: number, title: string, year: number, genres: [string]}]</code></p>
+          <h3>Examples</h3>
+          <pre class="example">
+            <h4>No parameters: Returns a 400 error</h4>
+            <p>Request: <code>/api/getBooksByAuthor</code></p>
+            <p>Result: <code>{"message":"Missing search fields","id":"missingParams"}</code></p>
+          </pre>
+          <pre class="example">
+            <h4>Full parameters: Returns applicable books</h4>
+            <p>Request: <code>/api/getBooksByAuthor?author=Homer</code></p>
+            <p>Result: <code>[{"author":"Homer","country":"Greece","language":"Greek","link":"https://en.wikipedia.org/wiki/Iliad\n","pages":608,"title":"Iliad","year":-735,"genres":["Epic Saga","Mythology"]}, ...]</code></p>
+          </pre>
+        </div>
+      </div>
+    </div>
+
+      <!-- /api/getBooksByLanguage -->
+      <div class="endpoint">
+        <h2 class="collapsible">
+          /api/getBooksByLanguage
+          <span class="methods">
+            <code>GET</code>
+    
+            <code>HEAD</code>
+          </span>
+        </h2>
+        <div class="content" style="display: none;">
+          <div class="content-box">
+            <h3>Query Params</h3>
+            <p><code>language</code>: Language to filter by</p>
+            <h3>Returns</h3>
+            <p>A JSON array of book objects</p>
+            <p>Format: <code>[{ author: string, country: string, language: string, link: string, pages: number, title: string, year: number, genres: [string]}]</code></p>
+            <h3>Examples</h3>
+            <pre class="example">
+              <h4>No parameters: Returns a 400 error</h4>
+              <p>Request: <code>/api/getBooksByLanguage</code></p>
+              <p>Result: <code>{"message":"Missing search fields","id":"missingParams"}</code></p>
+            </pre>
+            <pre class="example">
+              <h4>Full parameters: Returns applicable books</h4>
+              <p>Request: <code>/api/getBooksByLanguage?language=Greek</code></p>
+              <p>Result: <code>[{"author":"Homer","country":"Greece","language":"Greek","link":"https://en.wikipedia.org/wiki/Iliad\n","pages":608,"title":"Iliad","year":-735,"genres":["Epic Saga","Mythology"]}, ...]</code></p>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- /api/addBook -->
+      <div class="endpoint">
+        <h2 class="collapsible">
+          /api/addBook
+          <span class="methods">
+            <code>POST</code>
+          </span>
+        </h2>
+        <div class="content" style="display: none;">
+          <div class="content-box">
+            <h3>Query Params</h3>
+            <p><code>author</code>: Book author</p>
+            <p><code>country</code>: Book country of origin</p>
+            <p><code>language</code>: Book language</p>
+            <p><code>link</code>: Website where book is available</p>
+            <p><code>pages</code>: Page count</p>
+            <p><code>title</code>: Book title</p>
+            <p><code>year</code>: Year of release</p>
+            <p><code>genres</code>: Book genres, comma-separated</p>
+            <h3>Returns</h3>
+            <p>A JSON book object</p>
+            <p>Format: <code>{ author: string, country: string, language: string, link: string, pages: number, title: string, year: number, genres: [string]}</code></p>
+            <h3>Examples</h3>
+            <pre class="example">
+              <h4>No/Partial parameters: Returns a 400 error</h4>
+              <p>Request: <code>/api/addBook</code></p>
+              <p>Result: <code>{"message":"Missing fields: Author, Country, Language, Link, Page Count, Title, Year, Genres","id":"missingParams"}</code></p>
+            </pre>
+            <pre class="example">
+              <h4>Full parameters: Returns applicable books</h4>
+              <p>Request: <code>/api/addBook?author=Dean&country=America&language=English&link=book.com&pages=100&title=Test+Book&year=2024&genres=Fiction,Drama</code></p>
+              <p>Result: <code>{"author":"Dean","country":"America","language":"English","link":"book.com","pages":100,"title":"Test Book","year":2024,"genres":["Fiction","Drama"]}</code></p>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- /api/addGenreToBook -->
+      <div class="endpoint">
+        <h2 class="collapsible">
+          /api/addGenreToBook
+          <span class="methods">
+            <code>POST</code>
+          </span>
+        </h2>
+        <div class="content" style="display: none;">
+          <div class="content-box">
+            <h3>Query Params</h3>
+            <p><code>title</code>: Book title</p>
+            <p><code>genres</code>: Comma-separated list of genres to add</p>
+            <h3>Returns</h3>
+            Returns status code 204 with no body.
+            <h3>Examples</h3>
+          <pre class="example">
+            <h4>No/Partial parameters: Returns a 400 error</h4>
+            <p>Request: <code>/api/addGenreToBook</code></p>
+            <p>Result: <code>{"message":"Title, Genres","id":"missingParams"}</code></p>
+          </pre>
+          <pre class="example">
+            <h4>Full parameters: Returns 204</h4>
+            <p>Request: <code>/api/addGenreToBook?title=Iliad&genres=Romance</code></p>
+            <p>Result: <code>(No Body)</code></p>
+          </pre>
+          </div>
+        </div>
+      </div>
+  </section>
+</body>
+</html>

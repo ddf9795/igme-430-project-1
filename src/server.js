@@ -40,6 +40,8 @@ const handlePost = (request, response, parsedUrl) => {
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
+  } else if (parsedUrl.pathname === '/documentation') {
+    htmlHandler.getDocs(request, response);
   } else if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/api/getAllBooks') {

@@ -36,82 +36,109 @@ const getAllBooks = (request, response) => {
 const getBook = (request, response) => {
   const searchParams = Array.from(request.body).flat(Infinity);
 
-  let title;
-  let author;
-  let language;
+  let title = '';
+  let author = '';
+  let language = '';
 
   // Check for a 'valid' query
   for (let index = 0; index < searchParams.length; index++) {
     const param = Array.from(searchParams)[index];
     if (param === 'title') {
-      title = searchParams[index + 1];
+      title = searchParams[index + 1].trim();
     }
     if (param === 'author') {
-      author = searchParams[index + 1];
+      author = searchParams[index + 1].trim();
     }
     if (param === 'language') {
-      language = searchParams[index + 1];
+      language = searchParams[index + 1].trim();
     }
   }
 
-  // Start filtering through the provided parameters
-  let result = books.filter((book) => (book.title === title || title === undefined));
-  result = result.filter((book) => (book.author === author || author === undefined));
-  result = result.filter((book) => (book.language === language || language === undefined));
-
-  const responseJSON = {
-    result,
+  let responseJSON = {
+    message: 'Missing search fields',
+    id: 'missingParams',
   };
 
-  respondJSON(request, response, 200, responseJSON);
+  if (title === '' || author === '' || language === '') {
+    respondJSON(request, response, 400, responseJSON);
+  } else {
+    // Start filtering through the provided parameters
+    let result = books.filter((book) => (book.title === title || title === undefined || title === ''));
+    result = result.filter((book) => (book.author === author || author === undefined || author === ''));
+    result = result.filter((book) => (book.language === language || language === undefined || language === ''));
+
+    responseJSON = {
+      result,
+    };
+
+    respondJSON(request, response, 200, responseJSON);
+  }
 };
 
 // Find all books by a specific author
 const getBooksByAuthor = (request, response) => {
   const searchParams = Array.from(request.body).flat(Infinity);
 
-  let author;
+  let author = '';
 
   // Check for a 'valid' query
   for (let index = 0; index < searchParams.length; index++) {
     const param = Array.from(searchParams)[index];
     if (param === 'author') {
-      author = searchParams[index + 1];
+      author = searchParams[index + 1].trim();
     }
   }
 
-  // Start filtering through the provided parameters
-  const result = books.filter((book) => (book.author === author || author === undefined));
-
-  const responseJSON = {
-    result,
+  let responseJSON = {
+    message: 'Missing search fields',
+    id: 'missingParams',
   };
 
-  respondJSON(request, response, 200, responseJSON);
+  if (author === '') {
+    respondJSON(request, response, 400, responseJSON);
+  } else {
+    // Start filtering through the provided parameters
+    const result = books.filter((book) => (book.author === author || author === undefined || author === ''));
+
+    responseJSON = {
+      result,
+    };
+
+    respondJSON(request, response, 200, responseJSON);
+  }
 };
 
 // Find all books by a specific language
 const getBooksByLanguage = (request, response) => {
   const searchParams = Array.from(request.body).flat(Infinity);
 
-  let language;
+  let language = '';
 
   // Check for a 'valid' query
   for (let index = 0; index < searchParams.length; index++) {
     const param = Array.from(searchParams)[index];
     if (param === 'language') {
-      language = searchParams[index + 1];
+      language = searchParams[index + 1].trim();
     }
   }
 
-  // Start filtering through the provided parameters
-  const result = books.filter((book) => (book.language === language || language === undefined));
-
-  const responseJSON = {
-    result,
+  let responseJSON = {
+    message: 'Missing search fields',
+    id: 'missingParams',
   };
 
-  respondJSON(request, response, 200, responseJSON);
+  if (language === '') {
+    respondJSON(request, response, 400, responseJSON);
+  } else {
+    // Start filtering through the provided parameters
+    const result = books.filter((book) => (book.language === language || language === undefined || language === ''));
+
+    responseJSON = {
+      result,
+    };
+
+    respondJSON(request, response, 200, responseJSON);
+  }
 };
 
 // construct a book from POST body and add it to the database

@@ -19,3 +19,20 @@ html, body {
   font-size: 2em;
   text-align: center;
 }
+
+pre.example {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 100%;
+  border: 1px solid lightgray;
+  background-color: lightgray;
+}
+
+pre.result, code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 100%;
+  border: 1px solid gray;
+  background-color: rgb(0, 0, 0);
+  color:white;
+}
